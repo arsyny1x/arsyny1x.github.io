@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - arsyny1x</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase Compat (ใช้ง่ายกว่า) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,88 +12,123 @@
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen">
   
-  <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
-          <span class="text-white font-bold text-sm">A</span>
+  <!-- Login Screen -->
+  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-950">
+    <div class="w-full max-w-md p-8 rounded-2xl bg-gray-900 border border-gray-800">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
+          <span class="text-white font-bold text-2xl">A</span>
         </div>
-        <h1 class="text-xl font-bold text-white">arsyny1x <span class="text-gray-500 font-normal">| Admin</span></h1>
+        <h1 class="text-2xl font-bold text-white">Admin Login</h1>
+        <p class="text-gray-400 text-sm mt-2">Enter password to continue</p>
       </div>
-      <a href="index.html" target="_blank" class="text-sm text-gray-400 hover:text-white">View Site →</a>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    
-    <!-- Status -->
-    <div id="status" class="mb-4 px-4 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-sm">
-      ⏳ Loading Firebase...
-    </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-3 gap-4 mb-8">
-      <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800">
-        <div class="text-sm text-gray-400 mb-1">🟢 Online</div>
-        <p class="text-2xl font-bold text-emerald-400" id="count-online">0</p>
-      </div>
-      <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800">
-        <div class="text-sm text-gray-400 mb-1">🟡 Updating</div>
-        <p class="text-2xl font-bold text-yellow-400" id="count-updating">0</p>
-      </div>
-      <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800">
-        <div class="text-sm text-gray-400 mb-1">🔴 Patched</div>
-        <p class="text-2xl font-bold text-red-400" id="count-patched">0</p>
+      <div class="space-y-4">
+        <input type="password" id="admin-password" placeholder="Password" 
+               class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-center text-lg tracking-widest focus:outline-none focus:border-emerald-500/50"
+               onkeypress="if(event.key==='Enter')checkPassword()">
+        <button onclick="checkPassword()" class="w-full py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition-colors">
+          Login
+        </button>
+        <p id="login-error" class="text-red-400 text-sm text-center hidden">Wrong password!</p>
       </div>
     </div>
+  </div>
 
-    <!-- Add Game -->
-    <div class="mb-8 p-6 rounded-xl bg-gray-900/50 border border-gray-800">
-      <h2 class="text-lg font-semibold text-white mb-4">Add New Game</h2>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <input type="text" id="game-name" placeholder="Game Name" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
-        <input type="text" id="game-features" placeholder="Features" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
-        <select id="game-status" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
-          <option value="online">Online</option>
-          <option value="updating">Updating</option>
-          <option value="patched">Patched</option>
-        </select>
-        <button onclick="addGame()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors">
+  <!-- Admin Panel -->
+  <div id="admin-panel" class="hidden">
+    <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
+            <span class="text-white font-bold text-sm">A</span>
+          </div>
+          <h1 class="text-xl font-bold text-white">arsyny1x <span class="text-gray-500 font-normal">| Admin</span></h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button onclick="logout()" class="text-sm text-gray-400 hover:text-white transition-colors">Logout</button>
+          <a href="index.html" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors">View Site →</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800">
+          <div class="text-sm text-gray-400 mb-1">🟢 Online</div>
+          <p class="text-2xl font-bold text-emerald-400" id="count-online">0</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800">
+          <div class="text-sm text-gray-400 mb-1">🟡 Updating</div>
+          <p class="text-2xl font-bold text-yellow-400" id="count-updating">0</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800">
+          <div class="text-sm text-gray-400 mb-1">🔴 Patched</div>
+          <p class="text-2xl font-bold text-red-400" id="count-patched">0</p>
+        </div>
+      </div>
+
+      <!-- Add Game -->
+      <div class="mb-8 p-6 rounded-xl bg-gray-900/50 border border-gray-800">
+        <h2 class="text-lg font-semibold text-white mb-4">Add New Game</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <input type="text" id="game-name" placeholder="Game Name *" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+          <select id="game-status" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+            <option value="online">🟢 Online</option>
+            <option value="updating">🟡 Updating</option>
+            <option value="patched">🔴 Patched</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <input type="text" id="game-features" placeholder="Features (e.g. Auto Farm, ESP)" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+          <input type="url" id="game-image" placeholder="Image URL (optional)" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+        </div>
+        
+        <div id="image-preview" class="hidden mb-4">
+          <p class="text-sm text-gray-400 mb-2">Preview:</p>
+          <div class="w-48 h-28 rounded-lg overflow-hidden bg-gray-800 border border-gray-700">
+            <img id="preview-img" src="" alt="Preview" class="w-full h-full object-cover">
+          </div>
+        </div>
+        
+        <button onclick="addGame()" id="add-btn" class="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors">
           Add Game
         </button>
+        <p id="error-msg" class="mt-2 text-red-400 text-sm hidden"></p>
       </div>
-      <p id="error-msg" class="mt-2 text-red-400 text-sm hidden"></p>
-    </div>
 
-    <!-- Games Table -->
-    <div class="rounded-xl bg-gray-900/50 border border-gray-800 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
-        <h2 class="text-lg font-semibold text-white">Games</h2>
-        <input type="text" id="search" placeholder="Search..." oninput="searchGames(this.value)" class="px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+      <!-- Games Table -->
+      <div class="rounded-xl bg-gray-900/50 border border-gray-800 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-white">Games</h2>
+          <input type="text" id="search" placeholder="Search..." oninput="searchGames(this.value)" class="px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-800/50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Image</th>
+                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Game</th>
+                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Features</th>
+                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Status</th>
+                <th class="px-6 py-3 text-right text-xs text-gray-400 uppercase">Action</th>
+              </tr>
+            </thead>
+            <tbody id="games-list" class="divide-y divide-gray-800">
+              <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead class="bg-gray-800/50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Game</th>
-              <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Features</th>
-              <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Status</th>
-              <th class="px-6 py-3 text-right text-xs text-gray-400 uppercase">Action</th>
-            </tr>
-          </thead>
-          <tbody id="games-list" class="divide-y divide-gray-800">
-            <tr><td colspan="4" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
+    </main>
+  </div>
 
   <!-- Toast -->
   <div id="toast" class="fixed bottom-4 right-4 px-4 py-3 rounded-lg text-white transform translate-y-20 opacity-0 transition-all duration-300 z-50 bg-emerald-500"></div>
 
   <script>
-    // 🔥 Firebase Config ของคุณ
+    // 🔥 Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyCTr7FaiVonN58y_satDITT3HjcBmwNY9Q",
       authDomain: "arsyny1x-hub.firebaseapp.com",
@@ -105,60 +139,140 @@
       appId: "1:167271191741:web:af544285964ee6221e13d4"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
     let gamesData = {};
+    let sessionKey = null;
 
-    // แสดงสถานะเชื่อมต่อ
-    document.getElementById('status').className = 'mb-4 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm';
-    document.getElementById('status').textContent = '✅ Connected to Firebase';
+    // ==================== LOGIN SYSTEM ====================
 
-    // โหลดข้อมูลเกม
-    db.ref('games').on('value', (snapshot) => {
-      gamesData = snapshot.val() || {};
-      renderGames(gamesData);
-      updateStats(gamesData);
-    });
+    function checkPassword() {
+      const input = document.getElementById('admin-password').value;
+      const errorEl = document.getElementById('login-error');
+      
+      // เช็ครหัสผ่านจาก Firebase (ไม่มีในโค้ด!)
+      db.ref('config/adminPassword').once('value').then((snapshot) => {
+        const correctPassword = snapshot.val();
+        
+        if (!correctPassword) {
+          // ถ้ายังไม่มีรหัสใน Firebase ให้ใช้ default ครั้งแรก
+          if (input === 'admin123') {
+            db.ref('config/adminPassword').set('admin123');
+            loginSuccess();
+          } else {
+            errorEl.classList.remove('hidden');
+          }
+          return;
+        }
+        
+        if (input === correctPassword) {
+          loginSuccess();
+        } else {
+          errorEl.classList.remove('hidden');
+          setTimeout(() => errorEl.classList.add('hidden'), 3000);
+        }
+      });
+    }
+
+    function loginSuccess() {
+      // สร้าง session key สุ่ม
+      sessionKey = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      
+      // บันทึกลง Firebase (จะเช็คทุกครั้งที่ทำอะไร)
+      db.ref('config/adminSession').set({
+        key: sessionKey,
+        time: Date.now()
+      });
+      
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('admin-panel').classList.remove('hidden');
+      loadGames();
+    }
+
+    function logout() {
+      // ลบ session
+      db.ref('config/adminSession').remove();
+      sessionKey = null;
+      
+      document.getElementById('admin-panel').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('admin-password').value = '';
+    }
+
+    // เช็ค session ก่อนทำอะไร
+    function verifySession(callback) {
+      if (!sessionKey) {
+        showToast('Session expired. Please login again.', 'error');
+        logout();
+        return Promise.reject('No session');
+      }
+      
+      return db.ref('config/adminSession/key').once('value').then((snapshot) => {
+        if (snapshot.val() !== sessionKey) {
+          showToast('Session expired. Please login again.', 'error');
+          logout();
+          throw new Error('Invalid session');
+        }
+        return callback();
+      });
+    }
+
+    // ==================== GAMES MANAGEMENT ====================
+
+    function loadGames() {
+      db.ref('games').on('value', (snapshot) => {
+        gamesData = snapshot.val() || {};
+        renderGames(gamesData);
+        updateStats(gamesData);
+      });
+    }
 
     function renderGames(games) {
       const tbody = document.getElementById('games-list');
       const entries = Object.entries(games);
       
       if (entries.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500">No games yet. Add one!</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No games yet. Add one!</td></tr>';
         return;
       }
+      
+      tbody.innerHTML = entries.map(([id, game]) => {
+        const statusColors = {
+          online: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+          updating: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+          patched: 'bg-red-500/20 text-red-400 border-red-500/30'
+        };
 
-      tbody.innerHTML = entries.map(([id, game]) => `
-        <tr class="hover:bg-gray-800/30">
-          <td class="px-6 py-4 text-white font-medium">${game.name || id}</td>
-          <td class="px-6 py-4">
-            <input type="text" value="${game.features || ''}" onchange="updateGame('${id}', 'features', this.value)" 
-                   class="w-full px-2 py-1 rounded bg-gray-800 border border-gray-700 text-sm text-gray-300 focus:border-emerald-500/50 outline-none">
-          </td>
-          <td class="px-6 py-4">
-            <select onchange="updateGame('${id}', 'status', this.value)" class="px-3 py-1.5 rounded text-sm border ${getStatusClass(game.status)}">
-              <option value="online" ${game.status === 'online' ? 'selected' : ''}>🟢 Online</option>
-              <option value="updating" ${game.status === 'updating' ? 'selected' : ''}>🟡 Updating</option>
-              <option value="patched" ${game.status === 'patched' ? 'selected' : ''}>🔴 Patched</option>
-            </select>
-          </td>
-          <td class="px-6 py-4 text-right">
-            <button onclick="deleteGame('${id}')" class="text-red-400 hover:text-red-300 text-sm font-medium">Delete</button>
-          </td>
-        </tr>
-      `).join('');
-    }
+        const imageCell = game.image 
+          ? `<div class="w-16 h-10 rounded bg-gray-800 overflow-hidden"><img src="${game.image}" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>`
+          : '<div class="w-16 h-10 rounded bg-gray-800 flex items-center justify-center text-gray-600 text-xs">No image</div>';
 
-    function getStatusClass(status) {
-      const classes = {
-        online: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-        updating: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-        patched: 'bg-red-500/20 text-red-400 border-red-500/30'
-      };
-      return classes[status] || classes.online;
+        return `
+          <tr class="hover:bg-gray-800/30">
+            <td class="px-6 py-4">${imageCell}</td>
+            <td class="px-6 py-4">
+              <input type="text" value="${game.name || id}" onchange="updateGame('${id}', 'name', this.value)" 
+                     class="w-full px-2 py-1 rounded bg-gray-800 border border-gray-700 text-sm text-white focus:border-emerald-500/50 outline-none">
+            </td>
+            <td class="px-6 py-4">
+              <input type="text" value="${game.features || ''}" onchange="updateGame('${id}', 'features', this.value)" 
+                     class="w-full px-2 py-1 rounded bg-gray-800 border border-gray-700 text-sm text-gray-300 focus:border-emerald-500/50 outline-none">
+            </td>
+            <td class="px-6 py-4">
+              <select onchange="updateGame('${id}', 'status', this.value)"
+                      class="px-3 py-1.5 rounded-lg text-sm font-medium border ${statusColors[game.status]} bg-opacity-20 cursor-pointer focus:outline-none">
+                <option value="online" ${game.status === 'online' ? 'selected' : ''}>🟢 Online</option>
+                <option value="updating" ${game.status === 'updating' ? 'selected' : ''}>🟡 Updating</option>
+                <option value="patched" ${game.status === 'patched' ? 'selected' : ''}>🔴 Patched</option>
+              </select>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <button onclick="deleteGame('${id}')" class="text-red-400 hover:text-red-300 text-sm font-medium transition-colors">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function updateStats(games) {
@@ -169,11 +283,25 @@
       document.getElementById('count-patched').textContent = stats.patched;
     }
 
-    // เพิ่มเกมใหม่
+    // Preview image
+    document.getElementById('game-image')?.addEventListener('input', function() {
+      const url = this.value.trim();
+      const previewDiv = document.getElementById('image-preview');
+      const previewImg = document.getElementById('preview-img');
+      
+      if (url) {
+        previewImg.src = url;
+        previewDiv.classList.remove('hidden');
+      } else {
+        previewDiv.classList.add('hidden');
+      }
+    });
+
     function addGame() {
       const name = document.getElementById('game-name').value.trim();
       const features = document.getElementById('game-features').value.trim();
       const status = document.getElementById('game-status').value;
+      const image = document.getElementById('game-image').value.trim();
       const errorEl = document.getElementById('error-msg');
 
       if (!name) {
@@ -182,41 +310,68 @@
         return;
       }
 
+      const btn = document.getElementById('add-btn');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+
       const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
       
-      db.ref(`games/${id}`).set({
+      const gameData = {
         name: name,
         features: features || 'Auto Farm',
         status: status,
         updated: Date.now()
+      };
+      
+      if (image) gameData.image = image;
+      
+      // เช็ค session ก่อนเพิ่ม
+      verifySession(() => {
+        return db.ref(`games/${id}`).set(gameData);
       }).then(() => {
-        showToast('✅ Added!');
+        showToast('✅ Game added!');
         document.getElementById('game-name').value = '';
         document.getElementById('game-features').value = '';
+        document.getElementById('game-image').value = '';
+        document.getElementById('image-preview').classList.add('hidden');
         errorEl.classList.add('hidden');
       }).catch(err => {
-        showToast('❌ Error: ' + err.message, 'error');
+        if (err.message !== 'Invalid session') {
+          showToast('❌ Error: ' + err.message, 'error');
+        }
+      }).finally(() => {
+        btn.disabled = false;
+        btn.textContent = 'Add Game';
       });
     }
 
-    // อัปเดตเกม
     function updateGame(id, field, value) {
-      db.ref(`games/${id}`).update({
-        [field]: value,
-        updated: Date.now()
+      verifySession(() => {
+        return db.ref(`games/${id}`).update({
+          [field]: value,
+          updated: Date.now()
+        });
       }).then(() => showToast('✅ Saved!'))
-        .catch(err => showToast('❌ ' + err.message, 'error'));
+        .catch(err => {
+          if (err.message !== 'Invalid session') {
+            showToast('❌ ' + err.message, 'error');
+          }
+        });
     }
 
-    // ลบเกม
     function deleteGame(id) {
       if (!confirm('Delete this game?')) return;
-      db.ref(`games/${id}`).remove()
-        .then(() => showToast('✅ Deleted!'))
-        .catch(err => showToast('❌ ' + err.message, 'error'));
+      
+      verifySession(() => {
+        return db.ref(`games/${id}`).remove();
+      }).then(() => showToast('✅ Deleted!'))
+        .catch(err => {
+          if (err.message !== 'Invalid session') {
+            showToast('❌ ' + err.message, 'error');
+          }
+        });
     }
 
-    // ค้นหา
     function searchGames(query) {
       const filtered = {};
       Object.entries(gamesData).forEach(([id, game]) => {
@@ -227,7 +382,6 @@
       renderGames(filtered);
     }
 
-    // Toast
     function showToast(msg, type = 'success') {
       const toast = document.getElementById('toast');
       toast.textContent = msg;
