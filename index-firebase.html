@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>arsyny1x | Premium Roblox Scripts</title>
+  <meta name="description" content="Premium Roblox scripts hub with high-performance execution">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    .bg-cyber {
+      background-color: #030712;
+      background-image: 
+        linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      background-position: center center;
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.3));
+    }
+    .glass {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .code-window {
+      background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+  </style>
+</head>
+<body class="bg-cyber text-gray-100 font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full z-50 glass transition-all duration-300" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
+          <div class="relative">
+            <i data-lucide="terminal" class="w-8 h-8 text-emerald-400 group-hover:text-emerald-300 transition-colors"></i>
+            <div class="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
+          <span class="text-2xl font-bold tracking-tighter">
+            <span class="text-emerald-400">arsyny1x</span>
+          </span>
+        </div>
+        
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#games" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Games</a>
+          <a href="#script" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Script</a>
+          <a href="#features" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Features</a>
+          <a href="https://discord.gg/yourlink" target="_blank" 
+             class="inline-flex items-center px-6 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-all duration-300 hover:scale-105 shadow-lg shadow-indigo-600/25">
+            <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i>
+            Join Discord
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+    
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <div class="inline-flex items-center px-4 py-2 rounded-full bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-sm font-medium mb-8 animate-float backdrop-blur-sm">
+        <span class="flex h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+        v2.0 Now Available • Auto-Update Enabled
+      </div>
+      
+      <h1 class="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-tight">
+        <span class="block text-white mb-2">Dominate</span>
+        <span class="text-gradient">Every Game</span>
+      </h1>
+      
+      <p class="mt-6 text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed font-light">
+        Premium Roblox scripts hub with high-performance execution, undetected by Byfron & Hyperion.
+        Compatible with 50+ popular games.
+      </p>
+      
+      <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <button onclick="scrollToScript()" 
+                class="group relative px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg shadow-emerald-600/25 w-full sm:w-auto">
+          <span class="flex items-center justify-center">
+            <i data-lucide="copy" class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform"></i>
+            Get Script Now
+          </span>
+        </button>
+      </div>
+      
+      <div class="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-gray-800 pt-8">
+        <div>
+          <div class="text-3xl font-bold text-white">50K+</div>
+          <div class="text-sm text-gray-500 mt-1">Users</div>
+        </div>
+        <div>
+          <div class="text-3xl font-bold text-emerald-400">99%</div>
+          <div class="text-sm text-gray-500 mt-1">Uptime</div>
+        </div>
+        <div>
+          <div class="text-3xl font-bold text-white">24/7</div>
+          <div class="text-sm text-gray-500 mt-1">Support</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Games Section -->
+  <section id="games" class="py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4">
+          <span class="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
+          Live Status Updates
+        </div>
+        <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          Supported <span class="text-gradient">Games</span>
+        </h2>
+        <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+          Compatible with <span class="text-white font-semibold">50+ popular Roblox games</span>. 
+          Real-time status tracking with instant notifications.
+        </p>
+      </div>
+      
+      <!-- Status Legend -->
+      <div class="flex flex-wrap justify-center gap-4 mb-8">
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gray-900/50 border border-gray-800">
+          <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+          <span class="text-sm text-gray-200 font-medium">Working</span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gray-900/50 border border-gray-800">
+          <span class="flex h-2.5 w-2.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.8)] animate-pulse"></span>
+          <span class="text-sm text-gray-200 font-medium">Updating</span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gray-900/50 border border-gray-800">
+          <span class="flex h-2.5 w-2.5 rounded-full bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.8)]"></span>
+          <span class="text-sm text-gray-200 font-medium">Patched</span>
+        </div>
+      </div>
+      
+      <!-- Games Grid (Loaded from Firebase) -->
+      <div id="games-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Loading State -->
+        <div class="col-span-full flex items-center justify-center py-12">
+          <div class="flex items-center space-x-3 text-gray-400">
+            <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+            <span>Loading games...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script Section -->
+  <section id="script" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Loadstring Script</h2>
+        <p class="text-gray-400 text-lg">Copy the script below and paste into your executor</p>
+      </div>
+      
+      <div class="code-window rounded-2xl overflow-hidden group">
+        <div class="flex items-center justify-between px-4 py-3 bg-gray-900/80 border-b border-gray-800">
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+          </div>
+          <div class="flex items-center space-x-2 text-xs text-gray-500 font-mono">
+            <i data-lucide="file-code" class="w-3 h-3"></i>
+            <span>loader.lua</span>
+          </div>
+          <button onclick="copyScript()" 
+                  class="flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-gray-800 hover:bg-emerald-600/20 border border-gray-700 hover:border-emerald-500/50 text-gray-400 hover:text-emerald-400 transition-all duration-200"
+                  id="copy-button">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span class="text-xs font-medium">Copy</span>
+          </button>
+        </div>
+        
+        <div id="copy-toast" class="fixed top-24 right-6 px-4 py-2 bg-emerald-500 text-white text-sm rounded-lg opacity-0 translate-y-[-10px] transition-all duration-300 pointer-events-none flex items-center space-x-2 shadow-lg z-50">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span class="font-medium">Copied!</span>
+        </div>
+        
+        <div class="bg-gray-950 px-6 md:px-8 py-4 overflow-x-auto">
+          <pre class="font-mono text-sm md:text-base text-gray-300 leading-relaxed" id="script-content"><span class="text-purple-400">loadstring</span>(<span class="text-emerald-400">game</span>:HttpGet(<span class="text-yellow-400">"https://raw.githubusercontent.com/arsyny1x/script-hub/main/main.lua"</span>))()</pre>
+        </div>
+      </div>
+      
+      <div class="mt-6 flex items-start space-x-3 p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-200/80 text-sm">
+        <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5"></i>
+        <div>
+          <strong class="text-yellow-400 block mb-1">Warning:</strong>
+          Use this script at your own risk. We recommend testing on an alternate account first.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/30 border-y border-gray-800/50">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Why Choose Us?</h2>
+        <p class="text-gray-400">Features that make us different from others</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="group p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-emerald-500/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+          <div class="w-14 h-14 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300">
+            <i data-lucide="zap" class="w-7 h-7 text-emerald-400"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">Lightning Fast</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Fastest script loading system with zero delay. Auto-update enabled 24/7.
+          </p>
+        </div>
+
+        <div class="group p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+          <div class="w-14 h-14 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300">
+            <i data-lucide="shield-check" class="w-7 h-7 text-cyan-400"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">Undetected</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Advanced anti-detection system. Bypass Byfron & Hyperion effectively.
+          </p>
+        </div>
+
+        <div class="group p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]">
+          <div class="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300">
+            <i data-lucide="gift" class="w-7 h-7 text-purple-400"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">100% Free</h3>
+          <p class="text-gray-400 leading-relaxed">
+            No hidden fees. No subscription required. Free lifetime access with Discord support.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 sm:px-6 lg:px-8 bg-gray-950 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+        <div class="flex flex-col items-center md:items-start space-y-2">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="terminal" class="w-6 h-6 text-emerald-500"></i>
+            <span class="text-xl font-bold text-white tracking-tight">arsyny1x</span>
+          </div>
+          <p class="text-gray-500 text-sm">Created with ❤️ by <span class="text-emerald-400 font-medium">arsyny1x</span></p>
+        </div>
+        
+        <div class="flex items-center space-x-6">
+          <a href="https://discord.gg/yourlink" target="_blank" 
+             class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-indigo-400 hover:border-indigo-500/50 transition-all duration-300">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+          </a>
+          <a href="https://github.com/arsyny1x" target="_blank" 
+             class="p-2 rounded-lg bg-gray-900 border border-gray-800 text-gray-400 hover:text-white hover:border-white/50 transition-all duration-300">
+            <i data-lucide="github" class="w-5 h-5"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="mt-8 pt-8 border-t border-gray-800/50 text-center text-sm text-gray-600">
+        <p>&copy; 2024 arsyny1x. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Firebase Config - แก้ไขตรงนี้
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY_HERE",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Load Games from Firebase
+    function loadGames() {
+      db.ref('games').on('value', (snapshot) => {
+        const games = snapshot.val();
+        if (games) {
+          renderGames(games);
+        }
+      });
+    }
+
+    // Render Games
+    function renderGames(games) {
+      const container = document.getElementById('games-container');
+      const gamesArray = Object.entries(games);
+      
+      // แสดงแค่ 8 เกมแรก
+      const displayGames = gamesArray.slice(0, 8);
+      
+      container.innerHTML = displayGames.map(([id, game]) => {
+        const statusConfig = {
+          online: { 
+            badge: 'bg-emerald-500/20 border-emerald-500/30', 
+            dot: 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]',
+            text: 'text-emerald-300',
+            label: 'ONLINE'
+          },
+          updating: { 
+            badge: 'bg-yellow-500/20 border-yellow-500/30', 
+            dot: 'bg-yellow-400 shadow-[0_0_6px_rgba(250,204,21,0.8)] animate-pulse',
+            text: 'text-yellow-300',
+            label: 'UPDATING'
+          },
+          patched: { 
+            badge: 'bg-red-500/20 border-red-500/30', 
+            dot: 'bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.8)]',
+            text: 'text-red-300',
+            label: 'PATCHED'
+          }
+        };
+        
+        const s = statusConfig[game.status] || statusConfig.online;
+        
+        // สร้าง gradient สีตามสถานะ
+        const gradients = {
+          online: 'from-emerald-600/30 to-cyan-600/30',
+          updating: 'from-yellow-600/30 to-orange-600/30',
+          patched: 'from-red-600/30 to-rose-600/30'
+        };
+        const gradient = gradients[game.status] || gradients.online;
+        
+        return `
+          <div class="group relative rounded-xl bg-gray-900/80 border border-gray-700/50 hover:border-emerald-500/50 transition-all duration-300 overflow-hidden hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] hover:-translate-y-1">
+            <div class="aspect-[16/10] overflow-hidden relative">
+              <div class="absolute inset-0 bg-gradient-to-br ${gradient} group-hover:scale-105 transition-transform duration-500"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <i data-lucide="gamepad-2" class="w-10 h-10 text-white/60"></i>
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+              <div class="absolute top-2 right-2 flex items-center space-x-1 px-2 py-1 rounded-full ${s.badge} border backdrop-blur-sm">
+                <span class="flex h-1.5 w-1.5 rounded-full ${s.dot}"></span>
+                <span class="text-[10px] font-bold ${s.text} uppercase tracking-wider">${s.label}</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-white font-bold text-lg mb-1 group-hover:text-emerald-400 transition-colors truncate">${game.name}</h3>
+              <p class="text-xs text-gray-400 truncate">${game.features || 'Auto Farm'}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // เพิ่มปุ่ม View All ถ้ามีเกมมากกว่า 8
+      if (gamesArray.length > 8) {
+        container.innerHTML += `
+          <div class="group relative rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/50 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden cursor-pointer hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] hover:-translate-y-1" onclick="showAllGames()">
+            <div class="aspect-[16/10] overflow-hidden flex items-center justify-center relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-cyan-600/10 to-blue-600/10 group-hover:scale-105 transition-transform duration-500"></div>
+              <div class="text-center relative z-10">
+                <div class="w-14 h-14 mx-auto mb-2 rounded-2xl bg-gray-800/80 border-2 border-gray-700 group-hover:border-cyan-500/50 flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-lg">
+                  <span class="text-xl font-bold text-cyan-400">+${gamesArray.length - 8}</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h3 class="text-white font-bold text-lg mb-1 group-hover:text-cyan-400 transition-colors">View All</h3>
+              <p class="text-xs text-gray-400">${gamesArray.length} total games</p>
+            </div>
+          </div>
+        `;
+      }
+      
+      lucide.createIcons();
+    }
+
+    // Copy Script
+    function copyScript() {
+      const code = document.getElementById('script-content').innerText;
+      const toast = document.getElementById('copy-toast');
+      const btn = document.getElementById('copy-button');
+      
+      navigator.clipboard.writeText(code).then(() => {
+        toast.classList.remove('opacity-0', 'translate-y-[-10px]');
+        btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span class="text-xs font-medium">Copied!</span>`;
+        btn.classList.add('text-emerald-400', 'border-emerald-500/50');
+        lucide.createIcons();
+        
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-[-10px]');
+          btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i><span class="text-xs font-medium">Copy</span>`;
+          btn.classList.remove('text-emerald-400', 'border-emerald-500/50');
+          lucide.createIcons();
+        }, 2000);
+      });
+    }
+
+    // Scroll to Script
+    function scrollToScript() {
+      document.getElementById('script').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Show All Games Alert (หรือจะทำ Modal ก็ได้)
+    function showAllGames() {
+      alert('All games list coming soon! Total: 50+ games');
+    }
+
+    // Load games on start
+    loadGames();
+  </script>
+</body>
+</html>
