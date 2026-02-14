@@ -69,58 +69,125 @@
         </div>
       </div>
 
-      <!-- Add Game -->
-      <div class="mb-8 p-6 rounded-xl bg-gray-900/50 border border-gray-800">
-        <h2 class="text-lg font-semibold text-white mb-4">Add New Game</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <input type="text" id="game-name" placeholder="Game Name *" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
-          <select id="game-status" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
-            <option value="online">🟢 Online</option>
-            <option value="updating">🟡 Updating</option>
-            <option value="patched">🔴 Patched</option>
-          </select>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <input type="text" id="game-features" placeholder="Features (e.g. Auto Farm, ESP)" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
-          <input type="url" id="game-image" placeholder="Image URL (optional)" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
-        </div>
-        
-        <div id="image-preview" class="hidden mb-4">
-          <p class="text-sm text-gray-400 mb-2">Preview:</p>
-          <div class="w-48 h-28 rounded-lg overflow-hidden bg-gray-800 border border-gray-700">
-            <img id="preview-img" src="" alt="Preview" class="w-full h-full object-cover">
-          </div>
-        </div>
-        
-        <button onclick="addGame()" id="add-btn" class="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors">
-          Add Game
+      <!-- Tab Navigation -->
+      <div class="flex space-x-1 mb-6 bg-gray-900/50 p-1 rounded-xl border border-gray-800">
+        <button onclick="showTab('games')" id="tab-games" class="flex-1 py-2 px-4 rounded-lg bg-emerald-600 text-white font-medium transition-colors">
+          🎮 Games
         </button>
-        <p id="error-msg" class="mt-2 text-red-400 text-sm hidden"></p>
+        <button onclick="showTab('changelog')" id="tab-changelog" class="flex-1 py-2 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+          📝 Changelog
+        </button>
       </div>
 
-      <!-- Games Table -->
-      <div class="rounded-xl bg-gray-900/50 border border-gray-800 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-white">Games</h2>
-          <input type="text" id="search" placeholder="Search..." oninput="searchGames(this.value)" class="px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+      <!-- Games Tab -->
+      <div id="games-section" class="space-y-6">
+        <!-- Add Game -->
+        <div class="p-6 rounded-xl bg-gray-900/50 border border-gray-800">
+          <h2 class="text-lg font-semibold text-white mb-4">Add New Game</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input type="text" id="game-name" placeholder="Game Name *" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+            <select id="game-status" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+              <option value="online">🟢 Online</option>
+              <option value="updating">🟡 Updating</option>
+              <option value="patched">🔴 Patched</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input type="text" id="game-features" placeholder="Features (e.g. Auto Farm, ESP)" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+            <input type="url" id="game-image" placeholder="Image URL (optional)" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-emerald-500/50">
+          </div>
+          <div id="image-preview" class="hidden mb-4">
+            <p class="text-sm text-gray-400 mb-2">Preview:</p>
+            <div class="w-48 h-28 rounded-lg overflow-hidden bg-gray-800 border border-gray-700">
+              <img id="preview-img" src="" alt="Preview" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <button onclick="addGame()" id="add-btn" class="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors">
+            Add Game
+          </button>
+          <p id="game-error" class="mt-2 text-red-400 text-sm hidden"></p>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-gray-800/50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Image</th>
-                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Game</th>
-                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Features</th>
-                <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Status</th>
-                <th class="px-6 py-3 text-right text-xs text-gray-400 uppercase">Action</th>
-              </tr>
-            </thead>
-            <tbody id="games-list" class="divide-y divide-gray-800">
-              <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
-            </tbody>
-          </table>
+
+        <!-- Games List -->
+        <div class="rounded-xl bg-gray-900/50 border border-gray-800 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-white">Games</h2>
+            <input type="text" id="search-games" placeholder="Search..." oninput="searchGames(this.value)" class="px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-800/50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Image</th>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Game</th>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Features</th>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Status</th>
+                  <th class="px-6 py-3 text-right text-xs text-gray-400 uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody id="games-list" class="divide-y divide-gray-800">
+                <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+
+      <!-- Changelog Tab -->
+      <div id="changelog-section" class="space-y-6 hidden">
+        <!-- Add Changelog -->
+        <div class="p-6 rounded-xl bg-gray-900/50 border border-gray-800">
+          <h2 class="text-lg font-semibold text-white mb-4">Add Changelog Entry</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <select id="cl-game" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-500/50">
+              <option value="">🎮 Select Game (Optional)</option>
+              <option value="global">🌐 Global Update</option>
+            </select>
+            <select id="cl-type" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-500/50">
+              <option value="feature">✨ New Feature</option>
+              <option value="fix">🔧 Bug Fix</option>
+              <option value="update">📦 Update</option>
+              <option value="remove">🗑️ Removed</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input type="text" id="cl-version" placeholder="Version (e.g. v2.1.0) *" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-500/50">
+            <input type="text" id="cl-title" placeholder="Title *" class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-500/50">
+          </div>
+          <div class="mb-4">
+            <textarea id="cl-description" placeholder="Description" rows="3" class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-cyan-500/50 resize-none"></textarea>
+          </div>
+          <button onclick="addChangelog()" id="add-cl-btn" class="px-6 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-medium transition-colors">
+            Add Changelog
+          </button>
+          <p id="cl-error" class="mt-2 text-red-400 text-sm hidden"></p>
+        </div>
+
+        <!-- Changelog List -->
+        <div class="rounded-xl bg-gray-900/50 border border-gray-800 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-white">Changelog Entries</h2>
+            <input type="text" id="search-cl" placeholder="Search..." oninput="searchChangelog(this.value)" class="px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white focus:outline-none focus:border-cyan-500/50">
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-800/50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Date</th>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Version</th>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Type</th>
+                  <th class="px-6 py-3 text-left text-xs text-gray-400 uppercase">Title</th>
+                  <th class="px-6 py-3 text-right text-xs text-gray-400 uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody id="changelog-list" class="divide-y divide-gray-800">
+                <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -128,7 +195,7 @@
   <div id="toast" class="fixed bottom-4 right-4 px-4 py-3 rounded-lg text-white transform translate-y-20 opacity-0 transition-all duration-300 z-50 bg-emerald-500"></div>
 
   <script>
-    // 🔥 Firebase Config
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyCTr7FaiVonN58y_satDITT3HjcBmwNY9Q",
       authDomain: "arsyny1x-hub.firebaseapp.com",
@@ -143,20 +210,18 @@
     const db = firebase.database();
     
     let gamesData = {};
+    let changelogData = {};
     let sessionKey = null;
 
     // ==================== LOGIN SYSTEM ====================
-
     function checkPassword() {
       const input = document.getElementById('admin-password').value;
       const errorEl = document.getElementById('login-error');
       
-      // เช็ครหัสผ่านจาก Firebase (ไม่มีในโค้ด!)
       db.ref('config/adminPassword').once('value').then((snapshot) => {
         const correctPassword = snapshot.val();
         
         if (!correctPassword) {
-          // ถ้ายังไม่มีรหัสใน Firebase ให้ใช้ default ครั้งแรก
           if (input === 'admin123') {
             db.ref('config/adminPassword').set('admin123');
             loginSuccess();
@@ -176,38 +241,28 @@
     }
 
     function loginSuccess() {
-      // สร้าง session key สุ่ม
       sessionKey = Math.random().toString(36).substring(2) + Date.now().toString(36);
-      
-      // บันทึกลง Firebase (จะเช็คทุกครั้งที่ทำอะไร)
-      db.ref('config/adminSession').set({
-        key: sessionKey,
-        time: Date.now()
-      });
-      
+      db.ref('config/adminSession').set({ key: sessionKey, time: Date.now() });
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('admin-panel').classList.remove('hidden');
       loadGames();
+      loadChangelog();
     }
 
     function logout() {
-      // ลบ session
       db.ref('config/adminSession').remove();
       sessionKey = null;
-      
       document.getElementById('admin-panel').classList.add('hidden');
       document.getElementById('login-screen').classList.remove('hidden');
       document.getElementById('admin-password').value = '';
     }
 
-    // เช็ค session ก่อนทำอะไร
     function verifySession(callback) {
       if (!sessionKey) {
         showToast('Session expired. Please login again.', 'error');
         logout();
         return Promise.reject('No session');
       }
-      
       return db.ref('config/adminSession/key').once('value').then((snapshot) => {
         if (snapshot.val() !== sessionKey) {
           showToast('Session expired. Please login again.', 'error');
@@ -218,14 +273,51 @@
       });
     }
 
-    // ==================== GAMES MANAGEMENT ====================
+    // ==================== TAB NAVIGATION ====================
+    function showTab(tab) {
+      if (tab === 'games') {
+        document.getElementById('games-section').classList.remove('hidden');
+        document.getElementById('changelog-section').classList.add('hidden');
+        document.getElementById('tab-games').className = 'flex-1 py-2 px-4 rounded-lg bg-emerald-600 text-white font-medium transition-colors';
+        document.getElementById('tab-changelog').className = 'flex-1 py-2 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors';
+      } else {
+        document.getElementById('games-section').classList.add('hidden');
+        document.getElementById('changelog-section').classList.remove('hidden');
+        document.getElementById('tab-games').className = 'flex-1 py-2 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors';
+        document.getElementById('tab-changelog').className = 'flex-1 py-2 px-4 rounded-lg bg-cyan-600 text-white font-medium transition-colors';
+      }
+    }
 
+    // ==================== GAMES MANAGEMENT ====================
     function loadGames() {
       db.ref('games').on('value', (snapshot) => {
         gamesData = snapshot.val() || {};
         renderGames(gamesData);
         updateStats(gamesData);
+        updateGameDropdown();
       });
+    }
+
+    function updateGameDropdown() {
+      const select = document.getElementById('cl-game');
+      // เก็บค่าที่เลือกไว้
+      const selectedValue = select.value;
+      
+      // ล้าง options ยกเว้น 2 อันแรก
+      while (select.options.length > 2) {
+        select.remove(2);
+      }
+      
+      // เพิ่มเกมเข้าไป
+      Object.entries(gamesData).forEach(([id, game]) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = `🎮 ${game.name || id}`;
+        select.appendChild(option);
+      });
+      
+      // คืนค่าที่เลือกเดิม
+      select.value = selectedValue;
     }
 
     function renderGames(games) {
@@ -283,18 +375,12 @@
       document.getElementById('count-patched').textContent = stats.patched;
     }
 
-    // Preview image
     document.getElementById('game-image')?.addEventListener('input', function() {
       const url = this.value.trim();
       const previewDiv = document.getElementById('image-preview');
       const previewImg = document.getElementById('preview-img');
-      
-      if (url) {
-        previewImg.src = url;
-        previewDiv.classList.remove('hidden');
-      } else {
-        previewDiv.classList.add('hidden');
-      }
+      if (url) { previewImg.src = url; previewDiv.classList.remove('hidden'); }
+      else { previewDiv.classList.add('hidden'); }
     });
 
     function addGame() {
@@ -302,84 +388,148 @@
       const features = document.getElementById('game-features').value.trim();
       const status = document.getElementById('game-status').value;
       const image = document.getElementById('game-image').value.trim();
-      const errorEl = document.getElementById('error-msg');
+      const errorEl = document.getElementById('game-error');
 
-      if (!name) {
-        errorEl.textContent = 'Enter game name';
-        errorEl.classList.remove('hidden');
-        return;
-      }
+      if (!name) { errorEl.textContent = 'Enter game name'; errorEl.classList.remove('hidden'); return; }
 
       const btn = document.getElementById('add-btn');
-      btn.disabled = true;
-      btn.textContent = 'Adding...';
+      btn.disabled = true; btn.textContent = 'Adding...';
 
       const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-      
-      const gameData = {
-        name: name,
-        features: features || 'Auto Farm',
-        status: status,
-        updated: Date.now()
-      };
-      
+      const gameData = { name: name, features: features || 'Auto Farm', status: status, updated: Date.now() };
       if (image) gameData.image = image;
       
-      // เช็ค session ก่อนเพิ่ม
-      verifySession(() => {
-        return db.ref(`games/${id}`).set(gameData);
-      }).then(() => {
-        showToast('✅ Game added!');
-        document.getElementById('game-name').value = '';
-        document.getElementById('game-features').value = '';
-        document.getElementById('game-image').value = '';
-        document.getElementById('image-preview').classList.add('hidden');
-        errorEl.classList.add('hidden');
-      }).catch(err => {
-        if (err.message !== 'Invalid session') {
-          showToast('❌ Error: ' + err.message, 'error');
-        }
-      }).finally(() => {
-        btn.disabled = false;
-        btn.textContent = 'Add Game';
-      });
+      verifySession(() => db.ref(`games/${id}`).set(gameData))
+        .then(() => {
+          showToast('✅ Game added!');
+          document.getElementById('game-name').value = '';
+          document.getElementById('game-features').value = '';
+          document.getElementById('game-image').value = '';
+          document.getElementById('image-preview').classList.add('hidden');
+          errorEl.classList.add('hidden');
+        })
+        .catch(err => { if (err.message !== 'Invalid session') showToast('❌ Error: ' + err.message, 'error'); })
+        .finally(() => { btn.disabled = false; btn.textContent = 'Add Game'; });
     }
 
     function updateGame(id, field, value) {
-      verifySession(() => {
-        return db.ref(`games/${id}`).update({
-          [field]: value,
-          updated: Date.now()
-        });
-      }).then(() => showToast('✅ Saved!'))
-        .catch(err => {
-          if (err.message !== 'Invalid session') {
-            showToast('❌ ' + err.message, 'error');
-          }
-        });
+      verifySession(() => db.ref(`games/${id}`).update({ [field]: value, updated: Date.now() }))
+        .then(() => showToast('✅ Saved!'))
+        .catch(err => { if (err.message !== 'Invalid session') showToast('❌ ' + err.message, 'error'); });
     }
 
     function deleteGame(id) {
       if (!confirm('Delete this game?')) return;
-      
-      verifySession(() => {
-        return db.ref(`games/${id}`).remove();
-      }).then(() => showToast('✅ Deleted!'))
-        .catch(err => {
-          if (err.message !== 'Invalid session') {
-            showToast('❌ ' + err.message, 'error');
-          }
-        });
+      verifySession(() => db.ref(`games/${id}`).remove())
+        .then(() => showToast('✅ Deleted!'))
+        .catch(err => { if (err.message !== 'Invalid session') showToast('❌ ' + err.message, 'error'); });
     }
 
     function searchGames(query) {
       const filtered = {};
       Object.entries(gamesData).forEach(([id, game]) => {
-        if ((game.name || id).toLowerCase().includes(query.toLowerCase())) {
-          filtered[id] = game;
-        }
+        if ((game.name || id).toLowerCase().includes(query.toLowerCase())) filtered[id] = game;
       });
       renderGames(filtered);
+    }
+
+    // ==================== CHANGELOG MANAGEMENT ====================
+    function loadChangelog() {
+      db.ref('changelog').on('value', (snapshot) => {
+        changelogData = snapshot.val() || {};
+        renderChangelog(changelogData);
+      });
+    }
+
+    function renderChangelog(logs) {
+      const tbody = document.getElementById('changelog-list');
+      const entries = Object.entries(logs).sort((a, b) => b[1].date - a[1].date);
+      
+      if (entries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No changelog entries yet. Add one!</td></tr>';
+        return;
+      }
+
+      const typeLabels = { feature: '✨ Feature', fix: '🔧 Fix', update: '📦 Update', remove: '🗑️ Removed' };
+      const typeColors = { feature: 'text-emerald-400', fix: 'text-blue-400', update: 'text-cyan-400', remove: 'text-red-400' };
+
+      tbody.innerHTML = entries.map(([id, log]) => {
+        const date = new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const gameName = log.gameName || (log.gameId === 'global' ? '🌐 Global' : '🎮 Unknown');
+        return `
+          <tr class="hover:bg-gray-800/30">
+            <td class="px-6 py-4 text-gray-400 text-sm">${date}</td>
+            <td class="px-6 py-4 text-white font-medium">${log.version}</td>
+            <td class="px-6 py-4 ${typeColors[log.type] || 'text-gray-400'}">${typeLabels[log.type] || log.type}</td>
+            <td class="px-6 py-4">
+              <span class="text-cyan-400 text-xs block mb-1">${gameName}</span>
+              <span class="text-gray-300">${log.title}</span>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <button onclick="deleteChangelog('${id}')" class="text-red-400 hover:text-red-300 text-sm font-medium">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function addChangelog() {
+      const version = document.getElementById('cl-version').value.trim();
+      const type = document.getElementById('cl-type').value;
+      const title = document.getElementById('cl-title').value.trim();
+      const description = document.getElementById('cl-description').value.trim();
+      const gameId = document.getElementById('cl-game').value;
+      const errorEl = document.getElementById('cl-error');
+
+      if (!version || !title) { errorEl.textContent = 'Version and Title are required'; errorEl.classList.remove('hidden'); return; }
+
+      const btn = document.getElementById('add-cl-btn');
+      btn.disabled = true; btn.textContent = 'Adding...';
+
+      const id = Date.now().toString();
+      const logData = { version, type, title, description: description || '', date: Date.now() };
+      
+      // เพิ่มข้อมูลเกมถ้าเลือก
+      if (gameId && gameId !== 'global') {
+        logData.gameId = gameId;
+        const game = gamesData[gameId];
+        if (game) logData.gameName = game.name;
+      } else if (gameId === 'global') {
+        logData.gameId = 'global';
+        logData.gameName = 'Global';
+      }
+      
+      verifySession(() => db.ref(`changelog/${id}`).set(logData))
+        .then(() => {
+          showToast('✅ Changelog added!');
+          document.getElementById('cl-version').value = '';
+          document.getElementById('cl-title').value = '';
+          document.getElementById('cl-description').value = '';
+          document.getElementById('cl-game').value = '';
+          errorEl.classList.add('hidden');
+        })
+        .catch(err => { if (err.message !== 'Invalid session') showToast('❌ Error: ' + err.message, 'error'); })
+        .finally(() => { btn.disabled = false; btn.textContent = 'Add Changelog'; });
+    }
+
+    function deleteChangelog(id) {
+      if (!confirm('Delete this changelog entry?')) return;
+      verifySession(() => db.ref(`changelog/${id}`).remove())
+        .then(() => showToast('✅ Deleted!'))
+        .catch(err => { if (err.message !== 'Invalid session') showToast('❌ ' + err.message, 'error'); });
+    }
+
+    function searchChangelog(query) {
+      const filtered = {};
+      Object.entries(changelogData).forEach(([id, log]) => {
+        const gameName = log.gameName || '';
+        if (log.title.toLowerCase().includes(query.toLowerCase()) || 
+            log.version.toLowerCase().includes(query.toLowerCase()) ||
+            gameName.toLowerCase().includes(query.toLowerCase())) {
+          filtered[id] = log;
+        }
+      });
+      renderChangelog(filtered);
     }
 
     function showToast(msg, type = 'success') {

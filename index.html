@@ -32,12 +32,132 @@
       background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
       border: 1px solid rgba(16, 185, 129, 0.2);
     }
+    
+    /* Loading Animation */
+    .loader-container {
+      position: fixed;
+      inset: 0;
+      background: #030712;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .loader-container.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(16, 185, 129, 0.1);
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    .loader-ring {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border: 3px solid transparent;
+      border-top-color: #06b6d4;
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite reverse;
+    }
+    .loader-pulse {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+    
+    /* Content fade in */
+    .fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Changelog styles */
+    .changelog-item {
+      position: relative;
+      padding-left: 2rem;
+      margin-left: 1rem;
+      border-left: 2px solid rgba(16, 185, 129, 0.2);
+    }
+    .changelog-item::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+    .changelog-item:hover::before {
+      transform: scale(1.5);
+      transition: transform 0.3s ease;
+    }
+    
+    /* Changelog game thumbnail */
+    .changelog-game-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .changelog-game-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .changelog-game-icon {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.5);
+    }
   </style>
 </head>
 <body class="bg-cyber text-gray-100 font-sans antialiased">
 
+  <!-- Loading Screen -->
+  <div id="loader" class="loader-container">
+    <div class="relative flex items-center justify-center mb-6">
+      <div class="loader-pulse"></div>
+      <div class="loader-ring"></div>
+      <div class="loader"></div>
+    </div>
+    <div class="text-center">
+      <p class="text-emerald-400 font-semibold text-lg tracking-wider">arsyny1x</p>
+      <p class="text-gray-500 text-sm mt-1">Loading...</p>
+    </div>
+  </div>
+
   <!-- Header -->
-  <header class="fixed top-0 w-full z-50 glass" id="navbar">
+  <header class="fixed top-0 w-full z-50 glass opacity-0" id="navbar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo(0,0)">
@@ -46,19 +166,32 @@
         </div>
         <div class="hidden md:flex items-center space-x-8">
           <a href="#games" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Games</a>
+          <a href="#changelog" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Changelog</a>
           <a href="#script" class="text-gray-400 hover:text-white transition-colors text-sm font-medium">Script</a>
-          <a href="https://discord.gg/yourlink" target="_blank" 
+          <a href="https://discord.gg/zSFhz9VfHu" target="_blank" 
              class="inline-flex items-center px-6 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-all">
             <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i>
             Join Discord
           </a>
         </div>
+        <!-- Mobile menu button -->
+        <button class="md:hidden text-gray-400" onclick="toggleMobileMenu()">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 border-t border-gray-800">
+      <div class="px-4 py-4 space-y-3">
+        <a href="#games" class="block text-gray-400 hover:text-white py-2">Games</a>
+        <a href="#changelog" class="block text-gray-400 hover:text-white py-2">Changelog</a>
+        <a href="#script" class="block text-gray-400 hover:text-white py-2">Script</a>
       </div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden opacity-0" id="hero">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[120px]"></div>
     
     <div class="max-w-5xl mx-auto text-center relative z-10">
@@ -84,12 +217,19 @@
             Get Script Now
           </span>
         </button>
+        <button onclick="document.getElementById('changelog').scrollIntoView({behavior: 'smooth'})"
+                class="px-8 py-4 rounded-xl border border-gray-700 bg-gray-900/50 text-gray-300 font-semibold text-lg hover:bg-gray-800 hover:border-gray-600 transition-all">
+          <span class="flex items-center justify-center">
+            <i data-lucide="clock" class="w-5 h-5 mr-2"></i>
+            View Changelog
+          </span>
+        </button>
       </div>
     </div>
   </section>
 
   <!-- Supported Games Section -->
-  <section id="games" class="py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+  <section id="games" class="py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden opacity-0">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-12">
         <div class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4">
@@ -131,8 +271,40 @@
     </div>
   </section>
 
+  <!-- Changelog Section -->
+  <section id="changelog" class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900/30 border-y border-gray-800/50 opacity-0">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium mb-4">
+          <i data-lucide="history" class="w-3 h-3 mr-1"></i>
+          Update History
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+          <span class="text-gradient">Changelog</span>
+        </h2>
+        <p class="text-gray-400">Track updates for each supported game</p>
+      </div>
+      
+      <!-- Changelog Container -->
+      <div id="changelog-container" class="space-y-4">
+        <div class="flex items-center justify-center py-8">
+          <div class="w-5 h-5 border-2 border-gray-600 border-t-cyan-500 rounded-full animate-spin mr-3"></div>
+          <span class="text-gray-400">Loading changelog...</span>
+        </div>
+      </div>
+      
+      <!-- Expand Button -->
+      <div id="changelog-expand" class="hidden text-center mt-6">
+        <button onclick="toggleChangelog()" id="expand-btn" class="inline-flex items-center px-6 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white transition-all group">
+          <span id="expand-text">View All Updates</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 ml-2 group-hover:translate-y-1 transition-transform" id="expand-icon"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- Script Section -->
-  <section id="script" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+  <section id="script" class="py-20 px-4 sm:px-6 lg:px-8 relative opacity-0">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Loadstring Script</h2>
@@ -175,7 +347,7 @@
   </section>
 
   <!-- Features Section -->
-  <section id="features" class="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/30 border-y border-gray-800/50">
+  <section id="features" class="py-24 px-4 sm:px-6 lg:px-8 bg-gray-900/30 border-y border-gray-800/50 opacity-0">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Why Choose Us?</h2>
@@ -211,7 +383,7 @@
   </section>
 
   <!-- Footer -->
-  <footer class="py-12 px-4 sm:px-6 lg:px-8 bg-gray-950 border-t border-gray-800">
+  <footer class="py-12 px-4 sm:px-6 lg:px-8 bg-gray-950 border-t border-gray-800 opacity-0" id="footer">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
       <div class="flex items-center space-x-2 mb-4 md:mb-0">
         <i data-lucide="terminal" class="w-6 h-6 text-emerald-500"></i>
@@ -225,7 +397,7 @@
     // Initialize Icons
     lucide.createIcons();
 
-    // Firebase Config - ใส่ของคุณตรงนี้
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyCTr7FaiVonN58y_satDITT3HjcBmwNY9Q",
       authDomain: "arsyny1x-hub.firebaseapp.com",
@@ -239,11 +411,36 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // Loading Animation - Hide when loaded
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        
+        // Fade in sections
+        const sections = ['navbar', 'hero', 'games', 'changelog', 'script', 'features', 'footer'];
+        sections.forEach((id, index) => {
+          setTimeout(() => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.classList.add('fade-in');
+              el.style.opacity = '1';
+            }
+          }, index * 100);
+        });
+      }, 1500);
+    });
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
     // Load Games from Firebase
     function loadGames() {
       db.ref('games').on('value', (snapshot) => {
-        const games = snapshot.val() || {};
-        renderGames(games);
+        gamesData = snapshot.val() || {};  // Store in global variable
+        renderGames(gamesData);
       });
     }
 
@@ -256,7 +453,6 @@
         return;
       }
       
-      // ถ้ามี 1 เกม ให้อยู่ตรงกลาง
       const isSingleGame = gamesArray.length === 1;
       
       container.innerHTML = gamesArray.map(([id, game]) => {
@@ -285,8 +481,6 @@
         };
         
         const s = statusConfig[game.status] || statusConfig.online;
-        
-        // ถ้ามีรูปภาพใช้รูป ถ้าไม่มีใช้ไอคอน
         const hasImage = game.image && game.image.trim() !== '';
         
         return `
@@ -321,6 +515,121 @@
       lucide.createIcons();
     }
 
+    let changelogExpanded = false;
+    let allChangelogs = [];
+    let gamesData = {};  // Global variable to store games data
+
+    // Load Changelog from Firebase
+    function loadChangelog() {
+      db.ref('changelog').orderByChild('date').on('value', (snapshot) => {
+        const logs = snapshot.val() || {};
+        allChangelogs = Object.entries(logs).sort((a, b) => b[1].date - a[1].date);
+        renderChangelog();
+      });
+    }
+
+    function renderChangelog() {
+      const container = document.getElementById('changelog-container');
+      const expandBtn = document.getElementById('changelog-expand');
+      
+      if (allChangelogs.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">No changelog entries yet</p>';
+        expandBtn.classList.add('hidden');
+        return;
+      }
+      
+      // ถ้ามีมากกว่า 4 รายการ ให้แสดงปุ่มขยาย
+      if (allChangelogs.length > 4) {
+        expandBtn.classList.remove('hidden');
+      } else {
+        expandBtn.classList.add('hidden');
+      }
+      
+      const displayCount = changelogExpanded ? allChangelogs.length : 4;
+      const visibleLogs = allChangelogs.slice(0, displayCount);
+      
+      container.innerHTML = visibleLogs.map(([id, log], index) => {
+        const date = new Date(log.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+        
+        const typeColors = {
+          feature: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+          fix: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+          update: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+          remove: 'bg-red-500/20 text-red-400 border-red-500/30'
+        };
+        
+        const typeLabel = {
+          feature: '✨ New',
+          fix: '🔧 Fixed',
+          update: '📦 Update',
+          remove: '🗑️ Removed'
+        };
+        
+        const t = typeColors[log.type] || typeColors.update;
+        const label = typeLabel[log.type] || 'Update';
+        
+        // ถ้าไม่ได้ขยาย และเป็นรายการที่ 3-4 ให้จางลง
+        const isFaded = !changelogExpanded && index >= 2;
+        const opacityClass = isFaded ? 'opacity-40 hover:opacity-100 transition-opacity duration-300' : '';
+        
+        // หาข้อมูลเกม
+        const gameId = log.gameId;
+        const game = gameId && gamesData[gameId] ? gamesData[gameId] : null;
+        const gameName = game ? game.name : (log.gameName || 'Global');
+        const gameImage = game ? game.image : null;
+        
+        const gameThumb = gameImage 
+          ? `<div class="changelog-game-thumb"><img src="${gameImage}" alt="${gameName}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'changelog-game-icon\\'><i data-lucide=\\'gamepad-2\\' class=\\'w-6 h-6\\'></i></div>'; lucide.createIcons();"></div>`
+          : `<div class="changelog-game-thumb"><div class="changelog-game-icon"><i data-lucide="gamepad-2" class="w-6 h-6"></i></div></div>`;
+        
+        return `
+          <div class="changelog-item pb-6 last:pb-0 ${opacityClass}">
+            <div class="flex items-start gap-4">
+              ${gameThumb}
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  <span class="text-white font-medium">${gameName}</span>
+                  <span class="text-gray-500">•</span>
+                  <span class="text-emerald-400 font-semibold">${log.version || 'v2.0'}</span>
+                  <span class="px-2 py-0.5 rounded text-xs font-medium border ${t}">${label}</span>
+                </div>
+                <h4 class="text-gray-200 font-medium text-base mb-1">${log.title}</h4>
+                <p class="text-gray-400 text-sm">${log.description || ''}</p>
+                <span class="text-gray-500 text-xs mt-1 block">${date}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      lucide.createIcons();
+      
+      // อัปเดตข้อความปุ่ม
+      const btnText = document.getElementById('expand-text');
+      const btnIcon = document.getElementById('expand-icon');
+      if (changelogExpanded) {
+        btnText.textContent = 'Show Less';
+        btnIcon.classList.add('rotate-180');
+      } else {
+        btnText.textContent = `View All Updates (${allChangelogs.length})`;
+        btnIcon.classList.remove('rotate-180');
+      }
+    }
+
+    function toggleChangelog() {
+      changelogExpanded = !changelogExpanded;
+      renderChangelog();
+      
+      // Scroll ไปที่ changelog ถ้ากำลังย่อ
+      if (!changelogExpanded) {
+        document.getElementById('changelog').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
     // Copy Script
     function copyScript() {
       const code = document.getElementById('script-content').innerText;
@@ -343,6 +652,7 @@
     }
 
     loadGames();
+    loadChangelog();
   </script>
 </body>
 </html>
